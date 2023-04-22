@@ -27,6 +27,24 @@ public class Dao {
 		return "";
 	}
 	
+	public static String addUser(String username, String password) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://db:3306/usersProject", "user", "1234");
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery("SELECT * FROM users");
+			while (rs.next()) {
+				if (username.equals(rs.getString("username")))
+					return "userExists";
+			}
+			st.executeUpdate("INSERT INTO users (username, password) VALUES ('" + username + "', '" + strToHexString(password) + "')");
+			st.close();
+			con.close();
+			return "ok";
+		}
+		catch (SQLException | ClassNotFoundException e1) {return "error";}
+	}
+	
 	private static String strToHexString(String str) {
 		byte[] bytes = new byte[32];
 		try {
