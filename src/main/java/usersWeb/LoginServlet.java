@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -15,8 +16,11 @@ public class LoginServlet extends HttpServlet {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
 		String result = Dao.authenticate(username, password);
-		if (result.equals("ok"))
+		if (result.equals("ok")) {
+			HttpSession session = req.getSession();
+			session.setAttribute("username", username);		
 			res.sendRedirect("main.jsp?username=" + username);
+		}
 		else if (result.equals(""))
 			res.sendRedirect("login1.html");
 		else if (result.equals("error"))
