@@ -58,6 +58,19 @@ public class Dao {
 		catch (SQLException | ClassNotFoundException e1) {return false;}
 	}
 	
+	public static boolean resetPassword(String username, String password) {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://db:3306/usersProject", "user", "1234");
+			Statement st = con.createStatement();
+			st.executeUpdate("UPDATE users SET password = '" + strToHexString(password) + "' WHERE username = '" + username + "'");
+			st.close();
+			con.close();
+			return true;
+		}
+		catch (SQLException | ClassNotFoundException e1) {return false;}
+	}
+	
 	private static String strToHexString(String str) {
 		byte[] bytes = new byte[32];
 		try {
